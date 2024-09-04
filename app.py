@@ -90,12 +90,12 @@ def route_add_station():
     result = insert_into_stations(data, conn)
     return result
 
-@app.route('/stations/bike_rent/', methods=['POST']) 
-def route_bike_rent(period):
-    # input_data = request.get_json() 
-    specified_date = '2015-08'
+@app.route('/trips/bike_rent/', methods=['POST']) 
+def route_bike_rent():
+    input_data = request.get_json(force=True) # Parse the incoming json data as Dictionary
+    specified_date = input_data['period']
     conn = make_connection()
-    query = f"SELECT * FROM stations WHERE start_time LIKE ({specified_date}%)"
+    query = f"SELECT * FROM trips WHERE start_time LIKE '{specified_date}%'"
     selected_data = pd.read_sql_query(query, conn)
     result = selected_data.groupby('start_station_id').agg({
         'bikeid' : 'count', 
